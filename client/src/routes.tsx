@@ -3,6 +3,7 @@ import MainLayout from "./layouts/MainLayout";
 import Home from "./pages/common/Home";
 import RegisterPage from "./pages/auth/Register";
 import LoginPage from "./pages/auth/Login";
+import ProductDetails from "./pages/product/ProductDetails";
 
 export const router = createBrowserRouter([
   {
@@ -15,11 +16,15 @@ export const router = createBrowserRouter([
       },
       {
         path: "register",
-        element: <RegisterPage/>,
+        element: <RegisterPage />,
       },
       {
         path: "/login",
-        element: <LoginPage/>,
+        element: <LoginPage />,
+      },
+      {
+        path: "/products/:id",
+        element: <ProductDetails />,
       },
     ],
   },
