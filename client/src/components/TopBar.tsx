@@ -8,8 +8,8 @@ type TopBarProps = {
 
 const TopBar = ({ toggleCart }: TopBarProps) => {
   return (
-    <main className="text-white bg-black max-w-6xl mx-auto px-3 py-5">
-      <div className="flex items-center justify-between">
+    <main className="text-white bg-black px-3 py-6">
+      <div className="max-w-6xl mx-auto flex items-center justify-between">
         <Link to={"/"}>
           <h1 className="font-bold text-3xl">E-SHOP</h1>
         </Link>

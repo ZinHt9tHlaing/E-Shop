@@ -4,7 +4,7 @@ const categories = ["T-shirt", "Hoodie", "Shorts", "Jeans"];
 
 const SecondaryBar = () => {
   return (
-    <main className="text-black bg-gray-200 py-2 px-3">
+    <main className="text-black bg-gray-200 py-2 px-3 mb-10">
       <div className="max-w-6xl mx-auto flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Menu />

@@ -8,13 +8,13 @@ const Footer = () => {
   };
 
   return (
-    <footer className="w-full border-t md:px-0 lg:ml-0 lg:px-20">
-      <div className="container mx-auto pt-6 pb-8 text-center lg:py-6">
+    <footer className="w-full border-t md:px-0 mt-10 lg:ml-0 lg:px-20 mb-0 text-white bg-black">
+      <div className="container mx-auto py-4 text-center lg:py-6">
         © {date.getFullYear()} . Made with love by{" "}
         <Link
           to="/"
           onClick={scrollToTop}
-          className="underline font-semibold hover:text-gray-600 active:scale-90 duration-300"
+          className="underline font-semibold text-yellow-400 hover:text-yellow-500 active:scale-90 duration-300"
         >
           E-SHOP
         </Link>
