@@ -11,7 +11,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-background/90 supports-backdrop-filter:bg-background/60 border-b backdrop-blur">
       <TopBar toggleCart={toggleCart} />
       <SecondaryBar />
       <CartDrawer isCartOpen={isCartOpen} toggleCart={toggleCart} />
