@@ -40,13 +40,6 @@ export const registerUser = asyncHandler(
 // @access Public
 export const loginUser = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
-    const errors = validationResult(req).array({ onlyFirstError: true });
-
-    // If validation error occurs
-    if (errors.length > 0) {
-      return next(createError(errors[0].msg, 400, errorCode.invalid));
-    }
-
     const { email, password } = req.body;
 
     const existingUser = await User.findOne({ email });

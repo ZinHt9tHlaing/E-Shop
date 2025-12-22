@@ -9,9 +9,10 @@ import {
   loginValidator,
   registerValidator,
 } from "../../validators/userValidators";
+import { validateRequest } from "../../middlewares/validateRequest";
 
 export const userRoute: Router = express.Router();
 
-userRoute.post("/register", registerValidator, registerUser);
-userRoute.post("/login", loginValidator, loginUser);
+userRoute.post("/register", registerValidator, validateRequest, registerUser);
+userRoute.post("/login", loginValidator, validateRequest, loginUser);
 userRoute.post("/logout", logout);
