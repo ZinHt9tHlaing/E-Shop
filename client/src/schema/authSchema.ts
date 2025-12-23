@@ -1,9 +1,9 @@
 import z from "zod";
 
 export const registerSchema = z.object({
-  username: z
+  name: z
     .string()
-    .min(3, { message: "Username must be at least 3 characters long!" }),
+    .min(3, { message: "Name must be at least 3 characters long!" }),
   email: z.email({ message: "Please enter a valid email!" }),
   password: z
     .string()

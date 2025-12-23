@@ -2,7 +2,7 @@ import { useForm, type SubmitHandler } from "react-hook-form";
 import type z from "zod";
 import { registerSchema } from "../../schema/authSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { Loader2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -15,21 +15,35 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { useRegisterMutation } from "@/store/slices/api/userApi";
+import { toast } from "sonner";
+import { PasswordInput } from "@/components/auth/PasswordInput";
 
 type formInput = z.infer<typeof registerSchema>;
 
 const RegisterPage = () => {
+  const [registerMutation, { isLoading }] = useRegisterMutation();
+  const navigate = useNavigate();
+
   const form = useForm<formInput>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
-      username: "",
+      name: "",
       email: "",
       password: "",
     },
   });
 
   const onSubmitHandler: SubmitHandler<formInput> = async (data) => {
-    console.log("data", data);
+    try {
+      await registerMutation(data).unwrap();
+      form.reset();
+      toast.success("User registered successfully.");
+      navigate("/login");
+    } catch (error: any) {
+      toast.error(error?.data?.message);
+      console.error("Login error", error);
+    }
   };
 
   return (
@@ -45,15 +59,15 @@ const RegisterPage = () => {
             onSubmit={form.handleSubmit(onSubmitHandler)}
             className="mt-6 space-y-4"
           >
-            {/* Username */}
+            {/* Name */}
             <FormField
               control={form.control}
-              name="username"
+              name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Username</FormLabel>
+                  <FormLabel>name</FormLabel>
                   <FormControl>
-                    <Input placeholder="your_username" {...field} />
+                    <Input placeholder="your_name" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -83,7 +97,14 @@ const RegisterPage = () => {
                 <FormItem>
                   <FormLabel>Password</FormLabel>
                   <FormControl>
-                    <Input placeholder="******" {...field} />
+                    <PasswordInput
+                      placeholder="********"
+                      required
+                      inputMode="numeric"
+                      // minLength={8}
+                      // maxLength={8}
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -91,15 +112,16 @@ const RegisterPage = () => {
             />
             <Button
               type="submit"
+              disabled={isLoading}
               className="w-full cursor-pointer rounded-lg active:scale-95 duration-200"
             >
-              {form.formState.isSubmitting ? (
+              {isLoading ? (
                 <>
                   <Loader2 className="animate-spin text-white size-5" />
                   <span className="animate-pulse">Submitting...</span>
                 </>
               ) : (
-                "Login"
+                "Register"
               )}
             </Button>
           </form>

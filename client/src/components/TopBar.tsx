@@ -1,4 +1,4 @@
-import { ShoppingCart, User } from "lucide-react";
+import { LogIn, ShoppingCart } from "lucide-react";
 import SearchBox from "../common/SearchBox";
 import { Link } from "react-router";
 
@@ -19,7 +19,12 @@ const TopBar = ({ toggleCart }: TopBarProps) => {
             onClick={toggleCart}
             className="cursor-pointer active:scale-90 duration-200"
           />
-          <User className="cursor-pointer active:scale-90 duration-200" />
+          <Link
+            to="/login"
+            className="cursor-pointer active:scale-90 duration-200"
+          >
+            <LogIn />
+          </Link>
         </div>
       </div>
     </main>

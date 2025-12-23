@@ -51,7 +51,7 @@ export const loginUser = asyncHandler(
     if (!existingUser || !comparedPassword) {
       return next(
         createError(
-          "User not found with this email address",
+          "User not found with this credentials!",
           401,
           errorCode.NotFound
         )

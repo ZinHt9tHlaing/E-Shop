@@ -2,7 +2,7 @@ import { loginSchema } from "@/schema/authSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 import { useForm, type SubmitHandler } from "react-hook-form";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import type z from "zod";
 
 import { Button } from "@/components/ui/button";
@@ -15,10 +15,20 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { useLoginMutation } from "@/store/slices/api/userApi";
+import { PasswordInput } from "@/components/auth/PasswordInput";
+import { toast } from "sonner";
+import { useDispatch } from "react-redux";
+import type { AppDispatch } from "@/store/store";
+import { setUserInfo } from "@/store/slices/auth/auth";
 
 type formInput = z.infer<typeof loginSchema>;
 
 const LoginPage = () => {
+  const [loginMutation, { isLoading }] = useLoginMutation();
+  const navigate = useNavigate();
+  const dispatch = useDispatch<AppDispatch>();
+
   const form = useForm<formInput>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -28,7 +38,16 @@ const LoginPage = () => {
   });
 
   const onSubmitHandler: SubmitHandler<formInput> = async (data) => {
-    console.log("data", data);
+    try {
+      const response = await loginMutation(data).unwrap();
+      dispatch(setUserInfo(response));
+      form.reset();
+      toast.success(response.message);
+      navigate("/");
+    } catch (error: any) {
+      toast.error(error?.data?.message);
+      console.error("Login error", error);
+    }
   };
 
   return (
@@ -67,7 +86,14 @@ const LoginPage = () => {
                 <FormItem>
                   <FormLabel>Password</FormLabel>
                   <FormControl>
-                    <Input placeholder="******" {...field} />
+                    <PasswordInput
+                      placeholder="********"
+                      required
+                      inputMode="numeric"
+                      // minLength={8}
+                      // maxLength={8}
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -77,7 +103,7 @@ const LoginPage = () => {
               type="submit"
               className="w-full cursor-pointer rounded-lg active:scale-95 duration-200"
             >
-              {form.formState.isSubmitting ? (
+              {isLoading ? (
                 <>
                   <Loader2 className="animate-spin text-white size-5" />
                   <span className="animate-pulse">Submitting...</span>
