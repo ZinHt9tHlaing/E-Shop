@@ -2,18 +2,24 @@ import { useForm, type SubmitHandler } from "react-hook-form";
 import type z from "zod";
 import { registerSchema } from "../../schema/authSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button } from "@/components/ui/button";
 import { Link } from "react-router";
 import { Loader2 } from "lucide-react";
+
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 
 type formInput = z.infer<typeof registerSchema>;
 
 const RegisterPage = () => {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isSubmitting },
-  } = useForm<formInput>({
+  const form = useForm<formInput>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
       username: "",
@@ -33,78 +39,78 @@ const RegisterPage = () => {
         <p className="text-sm font-medium text-gray-400 text-center">
           Enter your information to register.
         </p>
-        <form
-          onSubmit={handleSubmit(onSubmitHandler)}
-          className="mt-6 space-y-4"
-        >
-          {/* Username */}
-          <div>
-            <label htmlFor="username" className="text-sm font-medium mb-4">
-              Username
-            </label>
-            <input
-              type="text"
-              id="username"
-              placeholder="your_username"
-              {...register("username")}
-              className="w-full text-sm border-2 border-gray-400 rounded-lg py-2 ps-2 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-2 focus:border-gray-500"
-            />
-            {errors.username && (
-              <span className="text-red-500">{errors.username.message}</span>
-            )}
-          </div>
 
-          {/* Email */}
-          <div>
-            <label htmlFor="email" className="text-sm font-medium mb-4">
-              Email
-            </label>
-            <input
-              type="email"
-              id="email"
-              placeholder="register@eshop.com"
-              {...register("email")}
-              className="w-full text-sm border-2 border-gray-400 rounded-lg py-2 ps-2 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-2 focus:border-gray-500"
-            />
-            {errors.email && (
-              <span className="text-red-500">{errors.email.message}</span>
-            )}
-          </div>
-
-          {/* Password */}
-          <div>
-            <label htmlFor="password" className="text-sm font-medium mb-4">
-              Password
-            </label>
-            <input
-              type="password"
-              id="password"
-              placeholder="******"
-              {...register("password")}
-              className="w-full text-sm border-2 border-gray-400 rounded-lg py-2 ps-2 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-2 focus:border-gray-500"
-            />
-            {errors.password && (
-              <span className="text-red-500">{errors.password.message}</span>
-            )}
-          </div>
-
-          <Button
-            type="submit"
-            className="w-full cursor-pointer rounded-lg active:scale-95 duration-200"
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmitHandler)}
+            className="mt-6 space-y-4"
           >
-            {isSubmitting ? (
-              <>
-                <Loader2 className="animate-spin text-white size-5" />
-                <span className="animate-pulse">Submitting...</span>
-              </>
-            ) : (
-              "Register"
-            )}
-          </Button>
-        </form>
+            {/* Username */}
+            <FormField
+              control={form.control}
+              name="username"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Username</FormLabel>
+                  <FormControl>
+                    <Input placeholder="your_username" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* Email */}
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <Input placeholder="example@eshop.com" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* Password */}
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Password</FormLabel>
+                  <FormControl>
+                    <Input placeholder="******" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <Button
+              type="submit"
+              className="w-full cursor-pointer rounded-lg active:scale-95 duration-200"
+            >
+              {form.formState.isSubmitting ? (
+                <>
+                  <Loader2 className="animate-spin text-white size-5" />
+                  <span className="animate-pulse">Submitting...</span>
+                </>
+              ) : (
+                "Login"
+              )}
+            </Button>
+          </form>
+        </Form>
+
         <p className="text-sm text-center mt-4">
           Already have an account?{" "}
-          <Link to="/login" className="font-medium underline underline-offset-4">
+          <Link
+            to="/login"
+            className="font-medium underline underline-offset-4"
+          >
             Login
           </Link>
         </p>
