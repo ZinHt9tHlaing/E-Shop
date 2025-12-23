@@ -4,6 +4,8 @@ import Home from "./pages/common/Home";
 import RegisterPage from "./pages/auth/Register";
 import LoginPage from "./pages/auth/Login";
 import ProductDetails from "./pages/product/ProductDetails";
+import Profile from "./pages/profile/Profile";
+import IsLogin from "./pages/auth/IsLogin";
 
 export const router = createBrowserRouter([
   {
@@ -25,6 +27,14 @@ export const router = createBrowserRouter([
       {
         path: "/products/:id",
         element: <ProductDetails />,
+      },
+      {
+        path: "/profile",
+        element: (
+          <IsLogin>
+            <Profile />
+          </IsLogin>
+        ),
       },
     ],
   },

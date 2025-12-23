@@ -15,4 +15,4 @@ export const userRoute: Router = express.Router();
 
 userRoute.post("/register", registerValidator, validateRequest, registerUser);
 userRoute.post("/login", loginValidator, validateRequest, loginUser);
-userRoute.post("/logout", logout);
+userRoute.delete("/logout", logout);

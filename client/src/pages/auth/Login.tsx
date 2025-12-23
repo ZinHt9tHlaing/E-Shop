@@ -18,14 +18,17 @@ import { Input } from "@/components/ui/input";
 import { useLoginMutation } from "@/store/slices/api/userApi";
 import { PasswordInput } from "@/components/auth/PasswordInput";
 import { toast } from "sonner";
-import { useDispatch } from "react-redux";
-import type { AppDispatch } from "@/store/store";
+import { useDispatch, useSelector } from "react-redux";
+import type { AppDispatch, RootState } from "@/store/store";
 import { setUserInfo } from "@/store/slices/auth/auth";
+import { useEffect } from "react";
 
 type formInput = z.infer<typeof loginSchema>;
 
 const LoginPage = () => {
   const [loginMutation, { isLoading }] = useLoginMutation();
+  const userInfo = useSelector((state: RootState) => state.auth.userInfo);
+
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
 
@@ -49,6 +52,12 @@ const LoginPage = () => {
       console.error("Login error", error);
     }
   };
+
+  useEffect(() => {
+    if (userInfo) {
+      navigate("/");
+    }
+  }, [navigate, userInfo]);
 
   return (
     <section className="flex h-[65vh] justify-center items-center mt-10">

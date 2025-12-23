@@ -18,11 +18,15 @@ import { Input } from "@/components/ui/input";
 import { useRegisterMutation } from "@/store/slices/api/userApi";
 import { toast } from "sonner";
 import { PasswordInput } from "@/components/auth/PasswordInput";
+import { useSelector } from "react-redux";
+import type { RootState } from "@/store/store";
+import { useEffect } from "react";
 
 type formInput = z.infer<typeof registerSchema>;
 
 const RegisterPage = () => {
   const [registerMutation, { isLoading }] = useRegisterMutation();
+  const userInfo = useSelector((state: RootState) => state.auth.userInfo);
   const navigate = useNavigate();
 
   const form = useForm<formInput>({
@@ -45,6 +49,12 @@ const RegisterPage = () => {
       console.error("Login error", error);
     }
   };
+
+  useEffect(() => {
+    if (userInfo) {
+      navigate("/");
+    }
+  }, [navigate, userInfo]);
 
   return (
     <section className="flex h-[65vh] justify-center items-center mt-10">
