@@ -65,6 +65,7 @@ export const loginUser = asyncHandler(
       _id: existingUser?._id,
       name: existingUser?.name,
       email: existingUser?.email,
+      role: existingUser?.role,
     });
   }
 );
