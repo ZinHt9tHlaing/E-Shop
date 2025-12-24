@@ -9,7 +9,7 @@ interface IUser extends Document {
   avatar?: {
     url: string;
     public_alt: string;
-  };
+  }[];
   role: "admin" | "customer";
   matchPassword: (enteredPassword: string) => Promise<boolean>;
 }

@@ -2,9 +2,11 @@ import { NextFunction, Request, Response } from "express";
 import asyncHandler from "../../utils/asyncHandler";
 import { User } from "../../models/userModel";
 import { createError } from "../../utils/error";
-import { validationResult } from "express-validator";
 import { errorCode } from "../../config/errorCode";
 import generateToken from "../../utils/generateToken";
+import { CustomRequest } from "../../types/customRequest";
+import { deleteImage, uploadSingleImage } from "../../utils/cloudinary";
+import { checkUserIfNotExist } from "../../utils/auth";
 
 // @route POST | api/register
 // @desc Register new user
@@ -82,3 +84,54 @@ export const logout = asyncHandler(async (req: Request, res: Response) => {
 
   res.status(200).json({ message: "User logged out successfully" });
 });
+
+// @route POST | api/upload-avatar
+// @desc update or Upload user avatar
+// @access Private
+export const uploadAvatar = asyncHandler(
+  async (req: CustomRequest, res: Response, next: NextFunction) => {
+    const userInfo = req.user;
+    const { image_url } = req.body;
+
+    const userDoc = await User.findById(userInfo?._id);
+    if (!userDoc) {
+      return next(createError("User not found", 404, errorCode.NotFound));
+    }
+
+    // Delete old avatar with public id
+    if (userDoc?.avatar) {
+      await deleteImage(userDoc.avatar[0].public_alt);
+    }
+
+    const response = await uploadSingleImage(image_url, "eShop.com/avatar");
+
+    // if (response?.result !== "ok") {
+    //   return next(
+    //     createError("Image upload failed", 400, errorCode.invalid)
+    //   );
+    // }
+
+    await User.findByIdAndUpdate(userDoc?._id, {
+      avatar: {
+        url: response.image_url,
+        public_alt: response.public_alt,
+      },
+    });
+
+    res.status(200).json({ message: "Avatar Uploaded." });
+  }
+);
+
+// @route GET | api/me
+// desc Get login user's information
+// @access Private
+export const getUserInfo = asyncHandler(
+  async (req: CustomRequest, res: Response, next: NextFunction) => {
+    const { user } = req;
+
+    const userDoc = await User.findById(user?._id).select("-password");
+    checkUserIfNotExist(userDoc);
+
+    res.status(200).json(userDoc);
+  }
+);

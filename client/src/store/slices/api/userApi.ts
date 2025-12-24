@@ -1,3 +1,4 @@
+import type { User } from "@/types/userType";
 import { apiSlice } from "../apiSlice";
 
 interface LoginInput {
@@ -9,6 +10,10 @@ interface RegisterInput extends LoginInput {
   name: string;
 }
 
+interface AvatarUploadInput {
+  image_url: string;
+}
+
 export const authApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     register: builder.mutation({
@@ -16,7 +21,6 @@ export const authApiSlice = apiSlice.injectEndpoints({
         url: "/users/register",
         method: "POST",
         body: data,
-        credentials: "include",
       }),
     }),
 
@@ -25,7 +29,6 @@ export const authApiSlice = apiSlice.injectEndpoints({
         url: "/users/login",
         method: "POST",
         body: data,
-        credentials: "include",
       }),
     }),
 
@@ -33,11 +36,30 @@ export const authApiSlice = apiSlice.injectEndpoints({
       query: () => ({
         url: "/users/logout",
         method: "DELETE",
-        credentials: "include",
+      }),
+    }),
+
+    currentUser: builder.query<User, void>({
+      query: () => ({
+        url: "/users/get-user-info",
+        method: "GET",
+      }),
+    }),
+
+    uploadAvatar: builder.mutation({
+      query: (data: AvatarUploadInput) => ({
+        url: "/users/upload-avatar",
+        method: "POST",
+        body: data,
       }),
     }),
   }),
 });
 
-export const { useRegisterMutation, useLoginMutation, useLogoutMutation } =
-  authApiSlice;
+export const {
+  useRegisterMutation,
+  useLoginMutation,
+  useLogoutMutation,
+  useCurrentUserQuery,
+  useUploadAvatarMutation
+} = authApiSlice;
