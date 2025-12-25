@@ -1,4 +1,10 @@
-import { LogIn, ShoppingCart, User, LogOut } from "lucide-react";
+import {
+  LogIn,
+  ShoppingCart,
+  User,
+  LogOut,
+  CircleUserRound,
+} from "lucide-react";
 import SearchBox from "../common/SearchBox";
 import { Link, useNavigate } from "react-router";
 import type { AppDispatch, RootState } from "@/store/store";
@@ -14,7 +20,11 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { clearUserInfo } from "@/store/slices/auth/auth";
 import { toast } from "sonner";
-import { useLogoutMutation } from "@/store/slices/api/userApi";
+import {
+  useCurrentUserQuery,
+  useLogoutMutation,
+} from "@/store/slices/api/userApi";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
 type TopBarProps = {
   toggleCart: () => void;
@@ -22,6 +32,8 @@ type TopBarProps = {
 
 const TopBar = ({ toggleCart }: TopBarProps) => {
   const userInfo = useSelector((state: RootState) => state.auth.userInfo);
+  const { data: currentUser } = useCurrentUserQuery();
+
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
 
@@ -39,7 +51,7 @@ const TopBar = ({ toggleCart }: TopBarProps) => {
   };
 
   return (
-    <main className="text-white bg-black px-3 py-6">
+    <main className="text-white bg-black  px-3 py-6">
       <div className="max-w-6xl mx-auto flex items-center justify-between">
         <Link to={"/"}>
           <h1 className="font-bold text-3xl">E-SHOP</h1>
@@ -53,7 +65,22 @@ const TopBar = ({ toggleCart }: TopBarProps) => {
           {userInfo ? (
             <DropdownMenu>
               <DropdownMenuTrigger className="cursor-pointer">
-                <User />
+                {currentUser?.avatar ? (
+                  <Avatar className="size-8 border border-gray-400 focus:outline-none">
+                    <AvatarImage
+                      src={currentUser && currentUser?.avatar?.[0]?.url}
+                      loading="lazy"
+                      decoding="async"
+                    />
+                    {!currentUser?.avatar?.[0]?.url && (
+                      <AvatarFallback className="text-2xl">
+                        {currentUser?.name.slice(0, 1)}
+                      </AvatarFallback>
+                    )}
+                  </Avatar>
+                ) : (
+                  <CircleUserRound />
+                )}
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-36">
                 <DropdownMenuLabel className="font-semibold text-center">

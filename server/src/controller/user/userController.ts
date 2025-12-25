@@ -65,9 +65,6 @@ export const loginUser = asyncHandler(
     res.status(200).json({
       message: "User logged in successfully",
       _id: existingUser?._id,
-      name: existingUser?.name,
-      email: existingUser?.email,
-      role: existingUser?.role,
     });
   }
 );
@@ -122,7 +119,7 @@ export const uploadAvatar = asyncHandler(
   }
 );
 
-// @route GET | api/me
+// @route GET | api/users/get-user-info
 // desc Get login user's information
 // @access Private
 export const getUserInfo = asyncHandler(

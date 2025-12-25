@@ -3,9 +3,6 @@ import { createSlice } from "@reduxjs/toolkit";
 interface AuthSliceState {
   userInfo: {
     _id: string;
-    email: string;
-    name: string;
-    role: "admin" | "customer";
   } | null;
 }
 

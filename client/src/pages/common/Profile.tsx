@@ -20,7 +20,7 @@ import { Loader2 } from "lucide-react";
 const Profile = () => {
   // const userInfo = useSelector((state: RootState) => state.auth.userInfo);
 
-  const { data: userInfo, refetch, isLoading } = useCurrentUserQuery();
+  const { data: userInfo, refetch } = useCurrentUserQuery();
   const [uploadAvatarMutation, { isLoading: isUploading }] =
     useUploadAvatarMutation();
 
