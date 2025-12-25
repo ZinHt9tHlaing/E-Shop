@@ -19,6 +19,7 @@ import { Loader2 } from "lucide-react";
 import EmailUpdateForm from "@/components/profile/EmailUpdateForm";
 import SuspenseFallback from "../../components/loading/SuspenseFallback";
 import NameUpdateForm from "@/components/profile/NameUpdateForm";
+import PasswordUpdateForm from "@/components/profile/PasswordUpdateForm";
 
 const Profile = () => {
   const { data: userInfo, refetch, isLoading } = useCurrentUserQuery();
@@ -113,8 +114,9 @@ const Profile = () => {
 
           <div className="flex flex-col md:flex-row gap-4">
             <EmailUpdateForm email={userInfo!.email} />
-            <NameUpdateForm name={userInfo?.name} />
+            <NameUpdateForm name={userInfo!.name} />
           </div>
+          <PasswordUpdateForm />
         </section>
       )}
     </>

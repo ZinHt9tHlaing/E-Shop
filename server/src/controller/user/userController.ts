@@ -7,6 +7,7 @@ import generateToken from "../../utils/generateToken";
 import { CustomRequest } from "../../types/customRequest";
 import { deleteImage, uploadSingleImage } from "../../utils/cloudinary";
 import { checkUserIfNotExist } from "../../utils/auth";
+import bcrypt from "bcrypt";
 
 // @route POST | api/register
 // @desc Register new user
@@ -186,5 +187,34 @@ export const updateName = asyncHandler(
     await User.findByIdAndUpdate(userDoc?._id, { name });
 
     res.status(200).json({ message: "Name updated successfully" });
+  }
+);
+
+// @route POST | api/users/update-password
+// desc Update user's password with old password.
+// @access Private
+export const updatePassword = asyncHandler(
+  async (req: CustomRequest, res: Response, next: NextFunction) => {
+    const { user } = req;
+    const { oldPassword, newPassword } = req.body;
+
+    const existingUser = await User.findById(user?._id).select("+password");
+    checkUserIfNotExist(existingUser);
+
+    const isPasswordMatch = await bcrypt.compare(
+      oldPassword,
+      existingUser!.password
+    );
+
+    if (!isPasswordMatch) {
+      return next(
+        createError("Old password is incorrect", 400, errorCode.invalid)
+      );
+    }
+
+    existingUser!.password = newPassword;
+    await existingUser!.save();
+
+    res.status(200).json({ message: "Password updated." });
   }
 );

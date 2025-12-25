@@ -49,7 +49,7 @@ const NameUpdateForm = ({ name }: NameUpdateFormProps) => {
       toast.success(response.message);
     } catch (error: any) {
       toast.error(error?.data?.message);
-      console.error("Update email error", error);
+      console.error("Update name error", error);
     }
   };
 

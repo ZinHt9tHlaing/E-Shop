@@ -7,6 +7,7 @@ import {
   registerUser,
   updateEmailAddress,
   updateName,
+  updatePassword,
   uploadAvatar,
 } from "../../controller/user/userController";
 import {
@@ -14,6 +15,7 @@ import {
   registerValidator,
   updateEmailValidator,
   updateNameValidator,
+  updatePasswordValidator,
   uploadImageValidator,
 } from "../../validators/userValidators";
 import { validateRequest } from "../../middlewares/validateRequest";
@@ -50,4 +52,12 @@ userRoute.put(
   updateNameValidator,
   validateRequest,
   updateName
+);
+
+userRoute.put(
+  "/update-password",
+  authMiddleware,
+  updatePasswordValidator,
+  validateRequest,
+  updatePassword
 );
