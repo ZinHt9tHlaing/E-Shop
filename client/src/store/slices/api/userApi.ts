@@ -18,6 +18,10 @@ interface UpdateEmailInput {
   email: string;
 }
 
+interface UpdateNameInput {
+  name: string;
+}
+
 export const authApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     register: builder.mutation({
@@ -71,6 +75,15 @@ export const authApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["User"],
     }),
+
+    updateName: builder.mutation({
+      query: (data: UpdateNameInput) => ({
+        url: "/users/update-name",
+        method: "PUT",
+        body: data,
+      }),
+      invalidatesTags: ["User"],
+    }),
   }),
 });
 
@@ -81,4 +94,5 @@ export const {
   useCurrentUserQuery,
   useUploadAvatarMutation,
   useUpdateEmailMutation,
+  useUpdateNameMutation,
 } = authApiSlice;

@@ -18,6 +18,7 @@ import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import EmailUpdateForm from "@/components/profile/EmailUpdateForm";
 import SuspenseFallback from "../../components/loading/SuspenseFallback";
+import NameUpdateForm from "@/components/profile/NameUpdateForm";
 
 const Profile = () => {
   const { data: userInfo, refetch, isLoading } = useCurrentUserQuery();
@@ -110,9 +111,9 @@ const Profile = () => {
             </CardContent>
           </Card>
 
-          {/* Email Update */}
-          <div className="flex gap-4">
+          <div className="flex flex-col md:flex-row gap-4">
             <EmailUpdateForm email={userInfo!.email} />
+            <NameUpdateForm name={userInfo?.name} />
           </div>
         </section>
       )}

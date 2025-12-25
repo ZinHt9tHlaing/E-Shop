@@ -160,3 +160,31 @@ export const updateEmailAddress = asyncHandler(
     res.status(200).json({ message: "Email updated successfully" });
   }
 );
+
+// @route POST | api/users/update-name
+// desc Update user's name
+// @access Private
+export const updateName = asyncHandler(
+  async (req: CustomRequest, res: Response, next: NextFunction) => {
+    const { user } = req;
+    const { name } = req.body;
+
+    const userDoc = await User.findById(user?._id);
+    checkUserIfNotExist(userDoc);
+
+    const existingName = await User.findOne({ name });
+    if (existingName) {
+      return next(
+        createError(
+          "User already exists with this name!",
+          400,
+          errorCode.nameExist
+        )
+      );
+    }
+
+    await User.findByIdAndUpdate(userDoc?._id, { name });
+
+    res.status(200).json({ message: "Name updated successfully" });
+  }
+);

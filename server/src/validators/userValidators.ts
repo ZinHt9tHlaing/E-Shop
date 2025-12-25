@@ -20,7 +20,10 @@ export const uploadImageValidator = [
   body("image_url").notEmpty().withMessage("Image is required"),
 ];
 
-// profile
 export const updateEmailValidator = [
   body("email").isEmail().withMessage("Valid email is required"),
+];
+
+export const updateNameValidator = [
+  body("name").notEmpty().withMessage("Name is required"),
 ];

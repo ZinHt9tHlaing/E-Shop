@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+
 import {
   Card,
   CardContent,
@@ -15,36 +17,35 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { emailUpdateSchema } from "@/schema/userSchema";
-import { useUpdateEmailMutation } from "@/store/slices/api/userApi";
+import { nameUpdateSchema } from "@/schema/userSchema";
+import { useUpdateNameMutation } from "@/store/slices/api/userApi";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
-import { useEffect } from "react";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { toast } from "sonner";
 import type z from "zod";
 
-interface EmailUpdateFormProps {
-  email: string;
+interface NameUpdateFormProps {
+  name: string;
 }
 
-type formInput = z.infer<typeof emailUpdateSchema>;
+type formInput = z.infer<typeof nameUpdateSchema>;
 
-const EmailUpdateForm = ({ email }: EmailUpdateFormProps) => {
-  const [updateEmailMutation, { isLoading }] = useUpdateEmailMutation();
+const NameUpdateForm = ({ name }: NameUpdateFormProps) => {
+  const [updateNameMutation, { isLoading }] = useUpdateNameMutation();
 
-  const form = useForm<z.infer<typeof emailUpdateSchema>>({
-    resolver: zodResolver(emailUpdateSchema),
+  const form = useForm<z.infer<typeof nameUpdateSchema>>({
+    resolver: zodResolver(nameUpdateSchema),
     defaultValues: {
-      email,
+      name,
     },
   });
 
-  const watchedEmail = form.watch("email");
+  const watchedName = form.watch("name");
 
   const onSubmit: SubmitHandler<formInput> = async (data) => {
     try {
-      const response = await updateEmailMutation(data).unwrap();
+      const response = await updateNameMutation(data).unwrap();
       toast.success(response.message);
     } catch (error: any) {
       toast.error(error?.data?.message);
@@ -53,16 +54,16 @@ const EmailUpdateForm = ({ email }: EmailUpdateFormProps) => {
   };
 
   useEffect(() => {
-    // Reset the form when email changes
-    form.reset({ email });
-  }, [email]);
+    // Reset the form when name changes
+    form.reset({ name });
+  }, [name]);
 
   return (
     <Card className="w-full">
       <CardHeader>
-        <CardTitle>Email address</CardTitle>
+        <CardTitle>Profile name</CardTitle>
         <CardDescription>
-          You can view or edit your email address here.
+          You can view or edit your profile name here.
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -73,12 +74,12 @@ const EmailUpdateForm = ({ email }: EmailUpdateFormProps) => {
           >
             <FormField
               control={form.control}
-              name="email"
+              name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="w-full">Email</FormLabel>
+                  <FormLabel className="w-full">Name</FormLabel>
                   <FormControl>
-                    <Input placeholder="example@eshop.com" {...field} />
+                    <Input placeholder="your_name" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -86,7 +87,7 @@ const EmailUpdateForm = ({ email }: EmailUpdateFormProps) => {
             />
             <Button
               type="submit"
-              disabled={email === watchedEmail || isLoading}
+              disabled={name === watchedName || isLoading}
               className="cursor-pointer rounded-lg active:scale-95 duration-200"
             >
               {isLoading ? (
@@ -105,4 +106,4 @@ const EmailUpdateForm = ({ email }: EmailUpdateFormProps) => {
   );
 };
 
-export default EmailUpdateForm;
+export default NameUpdateForm;
