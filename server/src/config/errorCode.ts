@@ -4,6 +4,7 @@ export const errorCode = {
   attack: "Error_Attack",
   accessTokenExpired: "Error_AccessTokenExpired",
   userExist: "Error_UserAlreadyExist",
+  emailExist: "Error_EmailAlreadyExist",
    NotFound: "Error_NotFound",
   overLimit: "Error_OverLimit",
   otpExpired: "Error_OtpExpired",

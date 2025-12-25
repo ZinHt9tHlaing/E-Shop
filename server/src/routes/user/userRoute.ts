@@ -5,11 +5,13 @@ import {
   loginUser,
   logout,
   registerUser,
+  updateEmailAddress,
   uploadAvatar,
 } from "../../controller/user/userController";
 import {
   loginValidator,
   registerValidator,
+  updateEmailValidator,
   uploadImageValidator,
 } from "../../validators/userValidators";
 import { validateRequest } from "../../middlewares/validateRequest";
@@ -31,3 +33,11 @@ userRoute.post(
 );
 
 userRoute.get("/get-user-info", authMiddleware, getUserInfo);
+
+userRoute.put(
+  "/update-email",
+  authMiddleware,
+  updateEmailValidator,
+  validateRequest,
+  updateEmailAddress
+);

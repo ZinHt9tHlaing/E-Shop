@@ -132,3 +132,31 @@ export const getUserInfo = asyncHandler(
     res.status(200).json(userDoc);
   }
 );
+
+// @route POST | api/update-email
+// desc Update user's email
+// @access Private
+export const updateEmailAddress = asyncHandler(
+  async (req: CustomRequest, res: Response, next: NextFunction) => {
+    const { user } = req;
+    const { email } = req.body;
+
+    const userDoc = await User.findById(user?._id);
+    checkUserIfNotExist(userDoc);
+
+    const existingEmailUser = await User.findOne({ email });
+    if (existingEmailUser) {
+      return next(
+        createError(
+          "User already exists with this email address!",
+          400,
+          errorCode.emailExist
+        )
+      );
+    }
+
+    await User.findByIdAndUpdate(userDoc?._id, { email });
+
+    res.status(200).json({ message: "Email updated successfully" });
+  }
+);
