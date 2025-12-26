@@ -5,14 +5,18 @@ import {
   loginUser,
   logout,
   registerUser,
+  resetPassword,
+  sendForgotPasswordEmail,
   updateEmailAddress,
   updateName,
   updatePassword,
   uploadAvatar,
 } from "../../controller/user/userController";
 import {
+  forgotPasswordValidator,
   loginValidator,
   registerValidator,
+  resetPasswordValidator,
   updateEmailValidator,
   updateNameValidator,
   updatePasswordValidator,
@@ -60,4 +64,18 @@ userRoute.put(
   updatePasswordValidator,
   validateRequest,
   updatePassword
+);
+
+userRoute.post(
+  "/forgot-password",
+  forgotPasswordValidator,
+  validateRequest,
+  sendForgotPasswordEmail
+);
+
+userRoute.put(
+  "/reset-password/:token",
+  resetPasswordValidator,
+  validateRequest,
+  resetPassword
 );

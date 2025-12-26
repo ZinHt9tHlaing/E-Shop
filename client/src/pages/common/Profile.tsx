@@ -20,6 +20,7 @@ import EmailUpdateForm from "@/components/profile/EmailUpdateForm";
 import SuspenseFallback from "../../components/loading/SuspenseFallback";
 import NameUpdateForm from "@/components/profile/NameUpdateForm";
 import PasswordUpdateForm from "@/components/profile/PasswordUpdateForm";
+import ResetPasswordForm from "@/components/profile/ResetPasswordForm";
 
 const Profile = () => {
   const { data: userInfo, refetch, isLoading } = useCurrentUserQuery();
@@ -117,6 +118,7 @@ const Profile = () => {
             <NameUpdateForm name={userInfo!.name} />
           </div>
           <PasswordUpdateForm />
+          <ResetPasswordForm email={userInfo!.email} />
         </section>
       )}
     </>

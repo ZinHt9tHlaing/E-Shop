@@ -1,5 +1,6 @@
 import type { User } from "@/types/userType";
 import { apiSlice } from "../apiSlice";
+import ForgotPassword from "../../../pages/auth/ForgotPassword";
 
 interface LoginInput {
   email: string;
@@ -22,9 +23,18 @@ interface UpdateNameInput {
   name: string;
 }
 
-interface updatePasswordInputs {
+interface UpdatePasswordInputs {
   oldPassword: string;
   newPassword: string;
+}
+
+interface ResetPasswordInputs {
+  newPassword: string;
+  token: string;
+}
+
+interface ForgotPassword {
+  email: string;
 }
 
 export const authApiSlice = apiSlice.injectEndpoints({
@@ -91,12 +101,30 @@ export const authApiSlice = apiSlice.injectEndpoints({
     }),
 
     updatePassword: builder.mutation({
-      query: (data: updatePasswordInputs) => ({
+      query: (data: UpdatePasswordInputs) => ({
         url: "/users/update-password",
         method: "PUT",
         body: data,
       }),
       invalidatesTags: ["User"],
+    }),
+
+    forgotPassword: builder.mutation({
+      query: (data: ForgotPassword) => ({
+        url: "/users/forgot-password",
+        method: "POST",
+        body: data,
+      }),
+    }),
+
+    resetPassword: builder.mutation({
+      query: (data: ResetPasswordInputs) => ({
+        url: `/users/reset-password/${data.token}`,
+        method: "PUT",
+        body: {
+          newPassword: data.newPassword,
+        },
+      }),
     }),
   }),
 });
@@ -110,4 +138,6 @@ export const {
   useUpdateEmailMutation,
   useUpdateNameMutation,
   useUpdatePasswordMutation,
+  useForgotPasswordMutation,
+  useResetPasswordMutation,
 } = authApiSlice;

@@ -64,7 +64,7 @@ const PasswordUpdateForm = () => {
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-5 w-2/3"
+            className="space-y-5 w-2/3 md:w-1/3"
           >
             {/* Old Password */}
             <FormField

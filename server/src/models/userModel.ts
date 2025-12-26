@@ -12,6 +12,9 @@ interface IUser extends Document {
   }[];
   role: "admin" | "customer";
   matchPassword: (enteredPassword: string) => Promise<boolean>;
+  resetPasswordToken: string | undefined;
+  resetPasswordExpire: string | undefined;
+  generatePasswordResetToken: () => string;
 }
 
 const userSchema = new mongoose.Schema<IUser>(
@@ -42,6 +45,8 @@ const userSchema = new mongoose.Schema<IUser>(
       enum: ["admin", "customer"],
       default: "customer",
     },
+    resetPasswordToken: String,
+    resetPasswordExpire: String,
   },
   {
     timestamps: true,
@@ -60,5 +65,18 @@ userSchema.pre("save", async function (next) {
 userSchema.methods.matchPassword = async function (enteredPassword: string) {
   return await bcrypt.compare(enteredPassword, this.password);
 }; // return boolean
+
+userSchema.methods.generatePasswordResetToken = function (): string {
+  const token = crypto.randomBytes(20).toString("hex");
+
+  // Hash token and set to resetPasswordToken field
+  this.resetPasswordToken = crypto
+    .createHash("sha256")
+    .update(token)
+    .digest("hex"); 
+  this.resetPasswordExpire = Date.now() + 10 * 60 * 1000; // 10 minutes
+
+  return token;
+};
 
 export const User = mongoose.model<IUser>("User", userSchema);

@@ -6,6 +6,8 @@ import LoginPage from "./pages/auth/Login";
 import ProductDetails from "./pages/product/ProductDetails";
 import IsLogin from "./pages/auth/IsLogin";
 import Profile from "./pages/common/Profile";
+import ResetPassword from "./pages/auth/ResetPassword";
+import ForgotPassword from "./pages/auth/ForgotPassword";
 
 export const router = createBrowserRouter([
   {
@@ -23,6 +25,11 @@ export const router = createBrowserRouter([
       {
         path: "/login",
         element: <LoginPage />,
+      },
+      { path: "/forgot-password", element: <ForgotPassword /> },
+      {
+        path: "/reset-password/:token",
+        element: <ResetPassword />,
       },
       {
         path: "/products/:id",

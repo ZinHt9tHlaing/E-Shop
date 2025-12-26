@@ -8,6 +8,9 @@ import { CustomRequest } from "../../types/customRequest";
 import { deleteImage, uploadSingleImage } from "../../utils/cloudinary";
 import { checkUserIfNotExist } from "../../utils/auth";
 import bcrypt from "bcrypt";
+import { forgetPasswordEmailTemplate } from "../../utils/emailTemplate";
+import { sendEmail } from "../../utils/sendEmail";
+import crypto from "crypto";
 
 // @route POST | api/register
 // @desc Register new user
@@ -216,5 +219,73 @@ export const updatePassword = asyncHandler(
     await existingUser!.save();
 
     res.status(200).json({ message: "Password updated." });
+  }
+);
+
+// @route POST | api/users/forgot-password
+// desc Send email to user's own mail.
+// @access Private
+export const sendForgotPasswordEmail = asyncHandler(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { email } = req.body;
+
+    const existingUser = await User.findOne({ email });
+    if (!existingUser) {
+      return next(
+        createError("User not found with this email!", 401, errorCode.NotFound)
+      );
+    }
+
+    const token = existingUser?.generatePasswordResetToken();
+    await existingUser.save();
+
+    const resetPasswordUrl = `${process.env.CLIENT_URL}/reset-password/${token}`;
+    const mailBody = forgetPasswordEmailTemplate(resetPasswordUrl);
+
+    try {
+      await sendEmail({
+        receiver_mail: existingUser?.email,
+        subject: "Password Reset - FASH.COM",
+        mailBody,
+      });
+    } catch (error) {
+      existingUser.resetPasswordExpire = undefined;
+      existingUser.resetPasswordToken = undefined;
+      await existingUser.save();
+    }
+
+    res.status(200).json({ message: "Reset Password email sent." });
+  }
+);
+
+// @route POST | api/users/reset-password/:token
+// desc Change user password
+// @access Private
+export const resetPassword = asyncHandler(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { token } = req.params;
+    const { newPassword } = req.body;
+
+    const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
+    const userDoc = await User.findOne({
+      resetPasswordToken: hashedToken,
+      resetPasswordExpire: { $gt: Date.now() },
+    });
+    if (!userDoc) {
+      return next(
+        createError(
+          "Token is invalid or has been expired",
+          400,
+          errorCode.NotFound
+        )
+      );
+    }
+
+    userDoc.password = newPassword;
+    userDoc.resetPasswordExpire = undefined;
+    userDoc.resetPasswordToken = undefined;
+    await userDoc.save();
+
+    res.status(200).json({ message: "Password changed." });
   }
 );

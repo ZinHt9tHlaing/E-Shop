@@ -93,7 +93,15 @@ const LoginPage = () => {
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Password</FormLabel>
+                  <div className="flex  items-center">
+                    <FormLabel>Password</FormLabel>
+                    <Link
+                      to={"/forgot-password"}
+                      className="ml-auto text-muted-foreground text-sm underline-offset-4 hover:text-gray-800 hover:underline"
+                    >
+                      Forgot your password?
+                    </Link>
+                  </div>
                   <FormControl>
                     <PasswordInput
                       placeholder="********"
