@@ -1,6 +1,5 @@
 import type { User } from "@/types/userType";
 import { apiSlice } from "../apiSlice";
-import ForgotPassword from "../../../pages/auth/ForgotPassword";
 
 interface LoginInput {
   email: string;

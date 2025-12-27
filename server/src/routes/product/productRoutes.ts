@@ -5,7 +5,7 @@ import {
   getFeaturedProducts,
   getNewArrivalsProducts,
   getProductById,
-  getProductsWithFilters,
+  getProductsWithFilter,
   updateProduct,
 } from "../../controller/product/productController";
 import { authMiddleware, isAdmin } from "../../middlewares/authMiddleware";
@@ -35,7 +35,7 @@ productRoutes.delete(
   deleteProduct
 );
 
-productRoutes.get("/get-products-filter", getProductsWithFilters);
-productRoutes.get("/get-products-new-arrival", getNewArrivalsProducts);
-productRoutes.get("/get-products-featured", getFeaturedProducts);
+productRoutes.get("/get-filter-products", getProductsWithFilter);
+productRoutes.get("/get-new-arrival-products", getNewArrivalsProducts);
+productRoutes.get("/get-featured-products", getFeaturedProducts);
 productRoutes.get("/:id", getProductById);

@@ -133,7 +133,7 @@ export const deleteProduct = asyncHandler(
 // @route GET | api/products/get-products-filter
 // @desc Get all products with filters.
 // @access Public
-export const getProductsWithFilters = asyncHandler(
+export const getProductsWithFilter = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     const { keyword, category, minPrice, maxPrice, size, color, sortBy } =
       req.query;
