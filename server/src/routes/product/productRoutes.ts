@@ -2,11 +2,18 @@ import express, { Router, Request, Response } from "express";
 import {
   createProduct,
   deleteProduct,
+  getFeaturedProducts,
+  getNewArrivalsProducts,
+  getProductById,
+  getProductsWithFilters,
   updateProduct,
 } from "../../controller/product/productController";
 import { authMiddleware, isAdmin } from "../../middlewares/authMiddleware";
 import { validateRequest } from "../../middlewares/validateRequest";
-import { deleteProductValidator, updateProductValidator } from "../../validators/productValidators";
+import {
+  deleteProductValidator,
+  updateProductValidator,
+} from "../../validators/productValidators";
 
 export const productRoutes: Router = express.Router();
 
@@ -27,3 +34,8 @@ productRoutes.delete(
   validateRequest,
   deleteProduct
 );
+
+productRoutes.get("/get-products-filter", getProductsWithFilters);
+productRoutes.get("/get-products-new-arrival", getNewArrivalsProducts);
+productRoutes.get("/get-products-featured", getFeaturedProducts);
+productRoutes.get("/:id", getProductById);

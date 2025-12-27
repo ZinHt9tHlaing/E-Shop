@@ -129,3 +129,108 @@ export const deleteProduct = asyncHandler(
     });
   }
 );
+
+// @route GET | api/products/get-products-filter
+// @desc Get all products with filters.
+// @access Public
+export const getProductsWithFilters = asyncHandler(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { keyword, category, minPrice, maxPrice, size, color, sortBy } =
+      req.query;
+
+    let query: any = {};
+
+    if (keyword) {
+      query.name = { $regex: keyword, $options: "i" };
+    }
+
+    if (category) {
+      query.category = category;
+    }
+
+    if (minPrice || maxPrice) {
+      query.price = {};
+      if (minPrice) query.price.$gte = Number(minPrice);
+      if (maxPrice) query.price.$lte = Number(maxPrice);
+    }
+
+    if (size) {
+      query.sizes = { $in: [size] };
+    }
+
+    if (color) {
+      query.colors = { $in: [size] };
+    }
+
+    // sorting
+    let sortOption: any = {};
+    if (sortBy === "price_asc") sortOption.price = 1;
+    if (sortBy === "price_desc") sortOption.price = -1;
+    if (sortBy === "latest") sortOption.createdAt = -1;
+    if (sortBy === "rating") sortOption.rating_count = -1;
+
+    const products = await Product.find(query).sort(sortOption);
+    const totalCount = products.length;
+
+    res.status(200).json({
+      message: "Get All Products with Filter.",
+      count: totalCount,
+      products,
+    });
+  }
+);
+
+// @route GET | api/products/get-products-new-arrival
+// @desc Get New Arrival products
+// @access Public
+export const getNewArrivalsProducts = asyncHandler(
+  async (req: Request, res: Response) => {
+    const products = await Product.find({ is_new_arrival: true }).sort({
+      createdAt: -1,
+    });
+    const totalCount = products.length;
+
+    res.status(200).json({
+      message: "Get New Arrival Products.",
+      totalCount,
+      NewArrivals: products,
+    });
+  }
+);
+
+// @route GET | api/products/get-products-featured
+// @desc Get Featured products
+// @access Public
+export const getFeaturedProducts = asyncHandler(
+  async (req: Request, res: Response) => {
+    const products = await Product.find({ is_feature: true }).sort({
+      createdAt: -1,
+    });
+    const totalCount = products.length;
+
+    res.status(200).json({
+      message: "Get Featured Products.",
+      totalCount,
+      FeaturedProducts: products,
+    });
+  }
+);
+
+// @route GET | api/products/:id
+// @desc Get product by id.
+// @access Public
+export const getProductById = asyncHandler(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { id } = req.params;
+
+    const product = await Product.findById(id);
+    if (!product) {
+      return next(createError("Product not found", 404, errorCode.NotFound));
+    }
+
+    res.status(200).json({
+      message: "Get Detail Product.",
+      product,
+    });
+  }
+);
