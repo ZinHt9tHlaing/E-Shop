@@ -5,6 +5,7 @@ import {
   getFeaturedProducts,
   getNewArrivalsProducts,
   getProductById,
+  getProductsMeta,
   getProductsWithFilter,
   updateProduct,
 } from "../../controller/product/productController";
@@ -39,3 +40,4 @@ productRoutes.get("/get-filter-products", getProductsWithFilter);
 productRoutes.get("/get-new-arrival-products", getNewArrivalsProducts);
 productRoutes.get("/get-featured-products", getFeaturedProducts);
 productRoutes.get("/:id", getProductById);
+productRoutes.get("/filters/meta", getProductsMeta);

@@ -1,15 +1,28 @@
 import { Menu } from "lucide-react";
-import { useNavigate } from "react-router";
+import { useNavigate, useSearchParams } from "react-router";
 
 const categories = ["T-shirt", "Hoodie", "Shorts", "Jeans"];
 
 const SecondaryBar = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+
+  const currentCategory = searchParams.get("category");
 
   const handleClick = (category: string) => {
-    navigate(
-      `/products/filter?category=${encodeURIComponent(category).toLowerCase()}`
-    );
+    const newParams = new URLSearchParams(searchParams);
+    const categoryLower = category.toLowerCase();
+
+    if (currentCategory === categoryLower) {
+      newParams.delete("category");
+    } else {
+      newParams.set("category", categoryLower);
+    }
+    const newSearchQuery = newParams.toString();
+    const path = newSearchQuery
+      ? `/products/filter?${newSearchQuery}`
+      : "/products/filter";
+    navigate(path, { replace: true });
   };
 
   return (
@@ -19,12 +32,16 @@ const SecondaryBar = () => {
           <Menu />
           <p className="text-lg font-bold">Categories</p>
         </div>
-        <div className="flex items-center gap-4 font-medium text-base">
+        <div className="flex items-center gap-4 text-base">
           {categories.map((category, index) => (
             <p
               key={index}
               onClick={() => handleClick(category)}
-              className={"cursor-pointer font-bold hover:underline"}
+              className={`cursor-pointer ${
+                currentCategory === category.toLowerCase()
+                  ? "underline font-bold"
+                  : ""
+              }`}
             >
               {category}
             </p>

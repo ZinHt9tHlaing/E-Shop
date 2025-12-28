@@ -54,7 +54,7 @@ const TopBar = ({ toggleCart }: TopBarProps) => {
     <main className="text-white bg-black  px-3 py-6">
       <div className="max-w-6xl mx-auto flex items-center justify-between">
         <Link to={"/"}>
-          <h1 className="font-bold text-3xl">E-SHOP</h1>
+          <h1 className="font-bold text-xl sm:text-2xl lg:text-3xl">E-SHOP</h1>
         </Link>
         <SearchBox />
         <div className="flex items-center gap-4">
@@ -66,20 +66,20 @@ const TopBar = ({ toggleCart }: TopBarProps) => {
             <DropdownMenu>
               <DropdownMenuTrigger className="cursor-pointer">
                 {currentUser?.avatar ? (
-                  <Avatar className="size-8 border border-gray-400 focus:outline-none">
+                  <Avatar className="size-7 sm:size-8 border border-gray-400 focus:outline-none">
                     <AvatarImage
                       src={currentUser && currentUser?.avatar?.[0]?.url}
                       loading="lazy"
                       decoding="async"
                     />
                     {!currentUser?.avatar?.[0]?.url && (
-                      <AvatarFallback className="text-2xl">
+                      <AvatarFallback className="text-sm sm:text-lg">
                         {currentUser?.name.slice(0, 1)}
                       </AvatarFallback>
                     )}
                   </Avatar>
                 ) : (
-                  <CircleUserRound />
+                  <CircleUserRound className="size-6 sm:size-7" />
                 )}
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-36">
@@ -127,7 +127,7 @@ const TopBar = ({ toggleCart }: TopBarProps) => {
           ) : (
             <Link
               to="/login"
-              className="cursor-pointer active:scale-90 duration-200"
+              className="size-6 sm:size-7 cursor-pointer active:scale-90 duration-200"
             >
               <LogIn />
             </Link>

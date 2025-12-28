@@ -20,7 +20,6 @@ const ProductDetails = () => {
   useEffect(() => {
     if (product) {
       if (product.images.length > 0) setSelectedImage(product.images[0].url);
-      console.log(selectedImage, product?.images[0].url);
       if (product.colors.length > 0) setSelectedColor(product.colors[0]);
       if (product.sizes.length > 0) setSelectedSize(product.sizes[0]);
     }
@@ -82,6 +81,7 @@ const ProductDetails = () => {
               }`}
               style={{ backgroundColor: color }}
               onClick={() => setSelectedColor(color)}
+              title={color}
             />
           ))}
         </div>
@@ -98,6 +98,7 @@ const ProductDetails = () => {
               }`}
               key={index}
               onClick={() => setSelectedSize(size)}
+              title={size}
             >
               {size}
             </div>

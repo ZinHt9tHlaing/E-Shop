@@ -155,11 +155,13 @@ export const getProductsWithFilter = asyncHandler(
     }
 
     if (size) {
-      query.sizes = { $in: [size] };
+      const sizes = Array.isArray(size) ? size : [size];
+      query.sizes = { $in: sizes };
     }
 
     if (color) {
-      query.colors = { $in: [size] };
+      const colors = Array.isArray(color) ? color : [color];
+      query.colors = { $in: colors };
     }
 
     // sorting
@@ -225,5 +227,32 @@ export const getProductById = asyncHandler(
     }
 
     res.status(200).json(product);
+  }
+);
+
+// @route GET | api/products/filters/meta
+// @desc Get products meta data.
+// @access Public
+export const getProductsMeta = asyncHandler(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const colors = await Product.distinct("colors"); // get unique colors
+    const sizes = await Product.distinct("sizes");
+
+    const priceRange = await Product.aggregate([
+      {
+        $group: {
+          _id: null,
+          minPrice: { $min: "$price" },
+          maxPrice: { $max: "$price" },
+        },
+      },
+    ]);
+
+    res.status(200).json({
+      colors,
+      sizes,
+      minPrice: priceRange[0]?.minPrice || 0,
+      maxPrice: priceRange[0]?.maxPrice || 0,
+    });
   }
 );

@@ -144,8 +144,8 @@ export const products = [
     description:
       "Classic Adidas sneakers in white. Lightweight, durable, and stylish for any occasion.",
     category: "shoe",
-    colors: ["White", "Grey", "Silver"],
-    sizes: ["40", "41", "42", "43", "44"],
+    colors: ["White", "Red", "Yellow"],
+    sizes: ["S", "M", "L", "XL", "2XL"],
     price: 108,
     images: [
       {
@@ -179,7 +179,7 @@ export const products = [
       "Classic blue denim jeans that combine durability with style. Perfect for casual and semi-formal outfits.",
     category: "jeans",
     colors: ["Blue", "Light Blue", "Dark Blue"],
-    sizes: ["30", "32", "34", "36"],
+    sizes: ["S", "M", "L", "2XL"],
     price: 70,
     images: [
       {
