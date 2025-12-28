@@ -172,11 +172,7 @@ export const getProductsWithFilter = asyncHandler(
     const products = await Product.find(query).sort(sortOption);
     const totalCount = products.length;
 
-    res.status(200).json({
-      message: "Get All Products with Filter.",
-      count: totalCount,
-      products,
-    });
+    res.status(200).json(products);
   }
 );
 
@@ -193,7 +189,7 @@ export const getNewArrivalsProducts = asyncHandler(
     res.status(200).json({
       message: "Get New Arrival Products.",
       totalCount,
-      NewArrivals: products,
+      data: products,
     });
   }
 );
@@ -211,7 +207,7 @@ export const getFeaturedProducts = asyncHandler(
     res.status(200).json({
       message: "Get Featured Products.",
       totalCount,
-      FeaturedProducts: products,
+      data: products,
     });
   }
 );
@@ -228,9 +224,6 @@ export const getProductById = asyncHandler(
       return next(createError("Product not found", 404, errorCode.NotFound));
     }
 
-    res.status(200).json({
-      message: "Get Detail Product.",
-      product,
-    });
+    res.status(200).json(product);
   }
 );

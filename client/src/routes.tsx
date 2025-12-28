@@ -8,6 +8,7 @@ import IsLogin from "./pages/auth/IsLogin";
 import Profile from "./pages/common/Profile";
 import ResetPassword from "./pages/auth/ResetPassword";
 import ForgotPassword from "./pages/auth/ForgotPassword";
+import ProductFilter from "./pages/product/ProductFilter";
 
 export const router = createBrowserRouter([
   {
@@ -32,8 +33,12 @@ export const router = createBrowserRouter([
         element: <ResetPassword />,
       },
       {
-        path: "/products/:id",
+        path: "/product/:id",
         element: <ProductDetails />,
+      },
+      {
+        path: "/products/filter",
+        element: <ProductFilter />,
       },
       {
         path: "/profile",

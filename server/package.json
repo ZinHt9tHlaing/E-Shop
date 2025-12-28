@@ -6,6 +6,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "npx tsc -w",
     "dev": "npx nodemon",
+    "db:seed": "ts-node src/db/seeder.ts",
     "build": "tsc"
   },
   "keywords": [],

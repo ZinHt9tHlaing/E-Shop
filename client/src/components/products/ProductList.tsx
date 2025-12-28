@@ -1,21 +1,21 @@
-import { products } from "../../data";
+import type { Product } from "@/types/productType";
 import ProductCard from "./ProductCard";
 
-// interface ProductListProps {
-//   products: Product[];
-// }
+interface ProductListProps {
+  products: Product[];
+}
 
-function ProductList() {
+function ProductList({ products = [] }: ProductListProps) {
   return (
     <main className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
       {products.map((product) => (
         <ProductCard
+          key={product._id}
           name={product.name}
           image={product.images[0].url}
-          ratingCount={product.rating}
+          ratingCount={product.rating_count}
           price={product.price}
-          key={product.id}
-          id={Number(product.id).toString()}
+          id={product._id}
         />
       ))}
     </main>

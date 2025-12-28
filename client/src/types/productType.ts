@@ -1,5 +1,6 @@
 export interface ProductImage {
   url: string;
+  public_alt?: string;
 }
 
 export interface Product {

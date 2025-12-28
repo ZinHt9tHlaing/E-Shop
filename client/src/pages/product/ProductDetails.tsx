@@ -1,52 +1,39 @@
 import RatingConverter from "@/common/RatingConverter";
+import ProductDetailsLoading from "@/components/products/ProductDetailsLoading";
+import ProductNotFound from "@/components/products/ProductNotFound";
+import { useGetProductByIdQuery } from "@/store/slices/api/productApi";
+import type { ProductImage } from "@/types/productType";
 import { Minus, Plus } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 
-const product = {
-  id: 1,
-  name: "Black T-Shirt",
-  price: 200,
-  category: "T-shirt",
-  size: ["Small", "Medium", "Large"],
-  colors: ["#F2440F", "#000000", "#f20fcc"],
-  description:
-    "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Vel, vero aut similique fuga repellat ratione.",
-  rating: 4,
-  images: [
-    {
-      url: "https://iili.io/FCGxQTv.png",
-    },
-    {
-      url: "https://cdn.shopify.com/s/files/1/0380/4705/6011/files/municipal-apparel_sport-utility-ss-t-shirt_black_MMTEE137_front.jpg",
-    },
-    {
-      url: "https://www.monterrain.co.uk/images/products/medium/4105928_2.jpg",
-    },
-    {
-      url: "https://www.mytheresa.com/media/1094/1238/100/3e/P00895460_d1.jpg",
-    },
-  ],
-};
-
 const ProductDetails = () => {
-  const { id } = useParams();
-
   const [selectedImage, setSelectedImage] = useState<string>();
   const [selectedColor, setSelectedColor] = useState<string>("#000000");
   const [selectedSize, setSelectedSize] = useState<string>("Medium");
+  const [quantity, setQuantity] = useState<number>(1);
+
+  const { id } = useParams();
+
+  const { data: product, isLoading } = useGetProductByIdQuery(id as string);
 
   useEffect(() => {
-    if (product.images.length > 0) {
-      setSelectedImage(product.images[0].url);
+    if (product) {
+      if (product.images.length > 0) setSelectedImage(product.images[0].url);
+      console.log(selectedImage, product?.images[0].url);
+      if (product.colors.length > 0) setSelectedColor(product.colors[0]);
+      if (product.sizes.length > 0) setSelectedSize(product.sizes[0]);
     }
   }, [product]);
+
+  if (isLoading) return <ProductDetailsLoading />;
+  if (!product) return <ProductNotFound />;
 
   return (
     <section className="container grid grid-cols-1 lg:grid-cols-2 gap-8 mt-8">
       <div className="grid grid-cols-4">
         <div className="col-span-1 flex flex-col gap-4">
-          {product.images.map((img, index) => (
+          {product.images.map((img: ProductImage, index: number) => (
             <div
               key={index}
               className={`${
@@ -56,7 +43,7 @@ const ProductDetails = () => {
             >
               <img
                 src={img.url}
-                alt={img.url}
+                alt={img.public_alt}
                 loading="lazy"
                 decoding="async"
                 onClick={() => setSelectedImage(img.url)}
@@ -76,7 +63,7 @@ const ProductDetails = () => {
 
       <div className="flex flex-col justify-between">
         <h2 className="text-xl lg:text-3xl font-bold mb-4">{product.name}</h2>
-        <RatingConverter count={product.rating} />
+        <RatingConverter count={product.rating_count} />
         <p className="text-xl lg:text-3xl font-bold my-2">${product.price}</p>
         <p className="text-sm font-medium text-gray-400">
           {product.description}
@@ -87,10 +74,10 @@ const ProductDetails = () => {
         {/* colors */}
         <h2 className="text-xl font-bold my-2">Colors</h2>
         <div className="flex items-center gap-2">
-          {product.colors.map((color, index) => (
+          {product.colors.map((color: string, index: number) => (
             <div
               key={index}
-              className={`size-6 rounded-full cursor-pointer ${
+              className={`size-6 rounded-full border border-gray-200 cursor-pointer ${
                 selectedColor === color && "border-2 border-gray-300 size-8"
               }`}
               style={{ backgroundColor: color }}
@@ -104,12 +91,12 @@ const ProductDetails = () => {
         {/* sizes */}
         <h2 className="text-xl font-bold my-2">Sizes</h2>
         <div className="flex items-center gap-2">
-          {product.size.map((size, i) => (
+          {product.sizes.map((size: string, index: number) => (
             <div
               className={`border border-gray-400 text-gray-400 px-4 py-2 rounded-full text-sm cursor-pointer ${
                 selectedSize === size && "text-white bg-black border-black"
               }`}
-              key={i}
+              key={index}
               onClick={() => setSelectedSize(size)}
             >
               {size}
@@ -122,11 +109,19 @@ const ProductDetails = () => {
         {/* add to cart */}
         <div className="mt-4 flex items-center gap-4">
           <div className="flex items-center gap-2">
-            <button className="bg-black p-2 text-white rounded-md cursor-pointer active:scale-90 duration-200">
+            <button
+              className="bg-black p-2 text-white rounded-md cursor-pointer active:scale-90 duration-100"
+              onClick={() =>
+                setQuantity((prev) => (prev === 1 ? prev : prev - 1))
+              }
+            >
               <Minus className="size-4" />
             </button>
-            <span className="font-medium">1</span>
-            <button className="bg-black p-2 text-white rounded-md cursor-pointer active:scale-90 duration-200">
+            <span className="font-medium">{quantity}</span>
+            <button
+              className="bg-black p-2 text-white rounded-md cursor-pointer active:scale-90 duration-100"
+              onClick={() => setQuantity((prev) => prev + 1)}
+            >
               <Plus className="size-4" />
             </button>
           </div>
