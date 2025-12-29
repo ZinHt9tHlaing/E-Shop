@@ -77,6 +77,7 @@ const PasswordUpdateForm = () => {
                     <PasswordInput
                       placeholder="********"
                       inputMode="numeric"
+                      autoComplete="off"
                       // minLength={8}
                       // maxLength={8}
                       {...field}
@@ -98,6 +99,7 @@ const PasswordUpdateForm = () => {
                     <PasswordInput
                       placeholder="********"
                       inputMode="numeric"
+                      autoComplete="off"
                       // minLength={8}
                       // maxLength={8}
                       {...field}
@@ -119,6 +121,7 @@ const PasswordUpdateForm = () => {
                     <PasswordInput
                       placeholder="********"
                       inputMode="numeric"
+                      autoComplete="off"
                       // minLength={8}
                       // maxLength={8}
                       {...field}
