@@ -7,30 +7,49 @@ import { CustomRequest } from "../../types/customRequest";
 import { User } from "../../models/userModel";
 import { getUserById } from "../../services/authServices";
 import { checkUserIfNotExist } from "../../utils/auth";
+import { uploadSingleImage } from "../../utils/cloudinary";
 
 // @route POST | api/products
 // @desc Add new product
 // @access Private/Admin
 export const createProduct = asyncHandler(
   async (req: CustomRequest, res: Response, next: NextFunction) => {
-    const {
-      name,
-      description,
-      price,
-      instock_count,
-      category,
-      sizes,
-      colors,
-      images,
-      is_new_arrival,
-      is_feature,
-      rating_count,
-    } = req.body;
+    const { name, description, category } = req.body;
 
-    const userId = req.user?._id;
+    const sizes = Array.isArray(req.body.sizes)
+      ? req.body.sizes
+      : [req.body.sizes]; // Convert to array
+    const colors = Array.isArray(req.body.colors)
+      ? req.body.colors
+      : [req.body.colors];
 
-    const existingUser = await getUserById(userId!);
-    checkUserIfNotExist(existingUser);
+    // Convert to Number
+    const price = Number(req.body.price);
+    const instock_count = Number(req.body.instock_count);
+    const rating_count = Number(req.body.rating_count);
+
+    const images = req.files as Express.Multer.File[];
+
+    // Convert to boolean
+    const is_feature = req.body.is_feature === "true";
+    const is_new_arrival = req.body.is_new_arrival === "true";
+
+    const updatedImages = await Promise.all(
+      images.map(async (image) => {
+        // buffer -> base64
+        const base64 = image.buffer.toString("base64");
+
+        const uploadImg = await uploadSingleImage(
+          `data:${image.mimetype};base64,${base64}`,
+          "eShop.com/products"
+        ); // Upload to cloudinary as base64 string
+
+        return {
+          url: uploadImg.image_url,
+          public_alt: uploadImg.public_alt,
+        };
+      })
+    );
 
     const newProducts = await Product.create({
       name,
@@ -40,15 +59,17 @@ export const createProduct = asyncHandler(
       category,
       sizes,
       colors,
-      images,
+      images: updatedImages,
       is_new_arrival,
       is_feature,
       rating_count,
-      userId: existingUser?._id,
+      userId: req.user?._id,
     });
 
     if (!newProducts) {
-      return next(createError("Something went wrong", 500, errorCode.invalid));
+      return next(
+        createError("Failed to create product", 500, errorCode.invalid)
+      );
     }
 
     res.status(201).json({

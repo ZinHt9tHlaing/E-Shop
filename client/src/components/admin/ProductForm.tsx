@@ -71,6 +71,8 @@ const ProductForm = ({
         },
   });
 
+  // console.log("errors", form.formState.errors);
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="mt-6 space-y-4">
@@ -119,6 +121,7 @@ const ProductForm = ({
                     onChange={(e) => field.onChange(parseFloat(e.target.value))}
                   />
                 </FormControl>
+                <FormMessage />
               </FormItem>
             )}
           />
@@ -136,6 +139,7 @@ const ProductForm = ({
                     onChange={(e) => field.onChange(parseFloat(e.target.value))}
                   />
                 </FormControl>
+                <FormMessage />
               </FormItem>
             )}
           />
@@ -150,6 +154,7 @@ const ProductForm = ({
               <FormControl>
                 <ImageUpload images={field.value} onChange={field.onChange} />
               </FormControl>
+              <FormMessage />
             </FormItem>
           )}
         />
@@ -167,6 +172,7 @@ const ProductForm = ({
                     onChange={field.onChange}
                   />
                 </FormControl>
+                <FormMessage />
               </FormItem>
             )}
           />
@@ -180,6 +186,7 @@ const ProductForm = ({
                 <FormControl>
                   <SizeSelector sizes={field.value} onChange={field.onChange} />
                 </FormControl>
+                <FormMessage />
               </FormItem>
             )}
           />
@@ -194,6 +201,7 @@ const ProductForm = ({
               <FormControl>
                 <ColorPicker colors={field.value} onChange={field.onChange} />
               </FormControl>
+              <FormMessage />
             </FormItem>
           )}
         />
@@ -212,6 +220,7 @@ const ProductForm = ({
                     className="cursor-pointer"
                   />
                 </FormControl>
+                <FormMessage />
               </FormItem>
             )}
           />
@@ -229,6 +238,7 @@ const ProductForm = ({
                     className="cursor-pointer"
                   />
                 </FormControl>
+                <FormMessage />
               </FormItem>
             )}
           />

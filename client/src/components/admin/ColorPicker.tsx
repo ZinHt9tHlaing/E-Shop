@@ -39,17 +39,17 @@ const ColorPicker = ({ colors, onChange }: ColorPickerProps) => {
         </Button>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2">
+      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-2">
         {colors.map((color, index) => (
           <div
             key={index}
-            className="flex items-center gap-1 p-2 rounded-md border"
+            className="flex items-center justify-center gap-1 p-2 rounded-md border"
           >
             <div
               style={{ backgroundColor: color }}
               className="size-6 rounded-full border"
             />
-            <span className="text-sm">{color}</span>
+            <span className="text-sm px-2">{color}</span>
             <Button
               type="button"
               onClick={() => removeColor(color)}

@@ -35,7 +35,7 @@ const Tiptap = ({ value, onChange }: TipTapProps) => {
         <Button
           type="button"
           size={"sm"}
-          variant={editor.isActive("bold") ? "default" : "outline"}
+          variant={editor.isActive("italic") ? "default" : "outline"}
           onClick={() => editor.chain().focus().toggleItalic().run()}
           className="cursor-pointer active:ring-1 active:ring-gray-500 duration-150"
         >

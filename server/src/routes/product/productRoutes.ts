@@ -15,10 +15,17 @@ import {
   deleteProductValidator,
   updateProductValidator,
 } from "../../validators/productValidators";
+import { upload } from "../../utils/upload";
 
 export const productRoutes: Router = express.Router();
 
-productRoutes.post("/create-product", authMiddleware, isAdmin, createProduct);
+productRoutes.post(
+  "/create-product",
+  authMiddleware,
+  isAdmin,
+  upload.array("images"),
+  createProduct
+);
 productRoutes.put(
   "/update-product/:id",
   authMiddleware,
