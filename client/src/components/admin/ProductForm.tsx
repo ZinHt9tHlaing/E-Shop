@@ -17,6 +17,7 @@ import CategorySelect from "./CategorySelect";
 import ColorPicker from "./ColorPicker";
 import SizeSelector from "./SizeSelector";
 import { Switch } from "../ui/switch";
+import Tiptap from "../editor/TipTap";
 
 interface ProductFormProps {
   initialData?: ProductFormInputs; // for Edit Form
@@ -96,22 +97,7 @@ const ProductForm = ({
             <FormItem>
               <FormLabel>Description</FormLabel>
               <FormControl>
-                <Input {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        {/* Description */}
-        <FormField
-          control={form.control}
-          name="description"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Description</FormLabel>
-              <FormControl>
-                <Input {...field} />
+                <Tiptap value={field.value} onChange={field.onChange} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -167,7 +153,7 @@ const ProductForm = ({
             </FormItem>
           )}
         />
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid lg:grid-cols-2 gap-4">
           {/* Category */}
           <FormField
             control={form.control}
