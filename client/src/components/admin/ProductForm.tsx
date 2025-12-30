@@ -13,6 +13,10 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { Loader2 } from "lucide-react";
 import ImageUpload from "./ImageUpload";
+import CategorySelect from "./CategorySelect";
+import ColorPicker from "./ColorPicker";
+import SizeSelector from "./SizeSelector";
+import { Switch } from "../ui/switch";
 
 interface ProductFormProps {
   initialData?: ProductFormInputs; // for Edit Form
@@ -163,8 +167,8 @@ const ProductForm = ({
             </FormItem>
           )}
         />
-        {/* Category */}
         <div className="grid grid-cols-2 gap-4">
+          {/* Category */}
           <FormField
             control={form.control}
             name="category"
@@ -172,15 +176,15 @@ const ProductForm = ({
               <FormItem className="w-full">
                 <FormLabel>Category</FormLabel>
                 <FormControl>
-                  {/* <CategorySelect
+                  <CategorySelect
                     value={field.value}
                     onChange={field.onChange}
-                  /> */}
+                  />
                 </FormControl>
               </FormItem>
             )}
           />
-          {/*  */}
+          {/* Sizes */}
           <FormField
             control={form.control}
             name="sizes"
@@ -188,7 +192,7 @@ const ProductForm = ({
               <FormItem>
                 <FormLabel>Sizes</FormLabel>
                 <FormControl>
-                  {/* <SizeSelector sizes={field.value} onChange={field.onChange} /> */}
+                  <SizeSelector sizes={field.value} onChange={field.onChange} />
                 </FormControl>
               </FormItem>
             )}
@@ -202,12 +206,12 @@ const ProductForm = ({
             <FormItem>
               <FormLabel>Colors</FormLabel>
               <FormControl>
-                {/* <ColorPicker colors={field.value} onChange={field.onChange} /> */}
+                <ColorPicker colors={field.value} onChange={field.onChange} />
               </FormControl>
             </FormItem>
           )}
         />
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           {/* New Arrival */}
           <FormField
             control={form.control}
@@ -216,10 +220,11 @@ const ProductForm = ({
               <FormItem className="flex items-center rounded-lg border p-4">
                 <FormLabel>New Arrival</FormLabel>
                 <FormControl>
-                  {/* <Switch
+                  <Switch
                     checked={field.value}
                     onCheckedChange={field.onChange}
-                  /> */}
+                    className="cursor-pointer"
+                  />
                 </FormControl>
               </FormItem>
             )}
@@ -232,10 +237,11 @@ const ProductForm = ({
               <FormItem className="flex items-center rounded-lg border p-4">
                 <FormLabel>Featured Product</FormLabel>
                 <FormControl>
-                  {/* <Switch
+                  <Switch
                     checked={field.value}
                     onCheckedChange={field.onChange}
-                  /> */}
+                    className="cursor-pointer"
+                  />
                 </FormControl>
               </FormItem>
             )}
