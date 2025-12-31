@@ -18,14 +18,16 @@ import ColorPicker from "./ColorPicker";
 import SizeSelector from "./SizeSelector";
 import { Switch } from "../ui/switch";
 import Tiptap from "../editor/TipTap";
+import { useEffect } from "react";
 
 interface ProductFormProps {
   initialData?: ProductFormInputs; // for Edit Form
   onSubmit: (data: ProductFormInputs) => void; // for create and edit
   isLoading: boolean; // disable button
+  isUpdating?: boolean;
 }
 
-interface Img {
+interface ImgTypes {
   url: string;
   public_alt: string;
 }
@@ -34,6 +36,7 @@ const ProductForm = ({
   initialData,
   onSubmit,
   isLoading,
+  isUpdating,
 }: ProductFormProps) => {
   const form = useForm<ProductFormInputs>({
     resolver: zodResolver(productSchema),
@@ -50,7 +53,7 @@ const ProductForm = ({
           is_new_arrival: initialData.is_new_arrival,
           rating_count: initialData.rating_count,
           images: initialData?.images.map(
-            (img): Img => ({
+            (img): ImgTypes => ({
               url: img.url,
               public_alt: img.public_alt!,
             })
@@ -72,6 +75,29 @@ const ProductForm = ({
   });
 
   // console.log("errors", form.formState.errors);
+
+  useEffect(() => {
+    if (initialData) {
+      form.reset({
+        name: initialData.name,
+        description: initialData.description,
+        price: initialData.price,
+        instock_count: initialData.instock_count,
+        category: initialData.category,
+        sizes: initialData.sizes,
+        colors: initialData.colors,
+        is_feature: initialData.is_feature,
+        is_new_arrival: initialData.is_new_arrival,
+        rating_count: initialData.rating_count,
+        images: initialData?.images.map(
+          (img): ImgTypes => ({
+            url: img.url,
+            public_alt: img.public_alt!,
+          })
+        ),
+      });
+    }
+  }, [form, initialData]);
 
   return (
     <Form {...form}>
@@ -246,10 +272,10 @@ const ProductForm = ({
 
         <Button
           type="submit"
-          disabled={isLoading}
+          disabled={isLoading || isUpdating}
           className="w-full cursor-pointer active:ring-2 active:ring-gray-400 duration-150"
         >
-          {isLoading ? (
+          {isUpdating || isLoading ? (
             <>
               <Loader2 className="animate-spin text-white size-5" />
               <span className="animate-pulse">

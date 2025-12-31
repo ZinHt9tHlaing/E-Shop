@@ -7,7 +7,7 @@ import { CustomRequest } from "../../types/customRequest";
 import { User } from "../../models/userModel";
 import { getUserById } from "../../services/authServices";
 import { checkUserIfNotExist } from "../../utils/auth";
-import { uploadSingleImage } from "../../utils/cloudinary";
+import { deleteImage, uploadSingleImage } from "../../utils/cloudinary";
 
 // @route POST | api/products
 // @desc Add new product
@@ -83,30 +83,83 @@ export const createProduct = asyncHandler(
 // @access Private/Admin
 export const updateProduct = asyncHandler(
   async (req: CustomRequest, res: Response, next: NextFunction) => {
-    const {
-      name,
-      description,
-      price,
-      instock_count,
-      category,
-      sizes,
-      colors,
-      images,
-      is_new_arrival,
-      is_feature,
-      rating_count,
-    } = req.body;
+    const { name, description, category, existingImages } = req.body;
 
-    const userId = req.user?._id;
+    const sizes = Array.isArray(req.body.sizes)
+      ? req.body.sizes
+      : [req.body.sizes];
+    const colors = Array.isArray(req.body.colors)
+      ? req.body.colors
+      : [req.body.colors];
+
+    const price = Number(req.body.price);
+    const instock_count = Number(req.body.instock_count);
+    const rating_count = Number(req.body.rating_count);
+
+    const is_feature = req.body.is_feature === "true";
+    const is_new_arrival = req.body.is_new_arrival === "true";
+
+    // parse existing images
+    const keepExistingImages = existingImages ? JSON.parse(existingImages) : [];
+
+    // new images
+    const newImages = req.files as Express.Multer.File[];
+
     const productId = req.params.id;
-
-    const existingUser = await getUserById(userId!);
-    checkUserIfNotExist(existingUser);
 
     const existingProduct = await Product.findById(productId);
     if (!existingProduct) {
       return next(createError("Product not found", 404, errorCode.NotFound));
     }
+
+    // existing product image from db -> [{url:image_url,public_alt:abcd},{url:image_url,public_alt:efgh}]
+    // existing image -> [{url:image_url,public_alt:abcd}]
+    // [{url:image_url,public_alt:abcd}] existing images
+    // [{url:image_url,public_alt:efgh}] image to delete
+
+    // find images to delete from cloud
+    const imagesToDelete = existingProduct.images.filter((existingImg) => {
+      return !keepExistingImages.some(
+        (keepImg: any) => keepImg.public_alt === existingImg.public_alt
+      );
+    });
+
+    if (imagesToDelete.length > 0) {
+      await Promise.all(
+        imagesToDelete.map(async (image) => {
+          if (image.public_alt) {
+            try {
+              await deleteImage(image.public_alt);
+            } catch (error) {
+              console.log(`Failed to delete image: ${image.public_alt}`, error);
+            }
+          }
+        })
+      );
+    }
+
+    // upload new images
+    let uploadedNewImages: any[] = [];
+    if (newImages && newImages.length > 0) {
+      uploadedNewImages = await Promise.all(
+        newImages.map(async (image) => {
+          // buffer -> base64
+          const base64 = image.buffer.toString("base64");
+
+          const uploadImg = await uploadSingleImage(
+            `data:${image.mimetype};base64,${base64}`,
+            "eShop.com/products"
+          ); // Upload to cloudinary as base64 string
+
+          return {
+            url: uploadImg.image_url,
+            public_alt: uploadImg.public_alt,
+          };
+        })
+      );
+    }
+
+    const finalImages = [...keepExistingImages, ...uploadedNewImages];
 
     existingProduct.name = name || existingProduct.name;
     existingProduct.description = description || existingProduct.description;
@@ -116,7 +169,7 @@ export const updateProduct = asyncHandler(
     existingProduct.category = category || existingProduct.category;
     existingProduct.sizes = sizes || existingProduct.sizes;
     existingProduct.colors = colors || existingProduct.colors;
-    existingProduct.images = images || existingProduct.images;
+    existingProduct.images = finalImages;
     existingProduct.is_new_arrival =
       is_new_arrival || existingProduct.is_new_arrival;
     existingProduct.is_feature = is_feature || existingProduct.is_feature;

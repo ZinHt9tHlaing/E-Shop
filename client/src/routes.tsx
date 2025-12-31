@@ -13,6 +13,7 @@ import IsLogin from "./pages/protector/IsLogin";
 import IsAdmin from "./pages/protector/IsAdmin";
 import Panel from "./pages/admin/Panel";
 import ErrorPage from "./pages/ErrorPage";
+import ProductUpdate from "./pages/admin/ProductUpdate";
 
 export const router = createBrowserRouter([
   {
@@ -64,6 +65,10 @@ export const router = createBrowserRouter([
           {
             path: "/admin/create-product",
             element: <ProductCreate />,
+          },
+          {
+            path: "/admin/edit-product/:id",
+            element: <ProductUpdate />,
           },
         ],
       },

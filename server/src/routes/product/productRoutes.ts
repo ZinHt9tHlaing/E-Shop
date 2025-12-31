@@ -32,6 +32,7 @@ productRoutes.put(
   isAdmin,
   updateProductValidator,
   validateRequest,
+  upload.array("images"),
   updateProduct
 );
 productRoutes.delete(

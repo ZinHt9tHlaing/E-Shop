@@ -52,7 +52,7 @@ export const productApiSlice = apiSlice.injectEndpoints({
     getProductsMeta: builder.query<ProductMeta, string>({
       query: () => "/products/filters/meta",
       providesTags: ["Product"],
-    }), 
+    }),
 
     createProduct: builder.mutation<Product, FormData>({
       query: (data) => ({
@@ -61,6 +61,15 @@ export const productApiSlice = apiSlice.injectEndpoints({
         body: data,
       }),
       invalidatesTags: ["Product"],
+    }),
+
+    updateProduct: builder.mutation<Product,{ id: string; formData: FormData }>({
+      query: (data) => ({
+        url: `/products/update-product/${data.id}`,
+        method: "PUT",
+        body: data.formData,
+      }),
+      // invalidatesTags: ["Product"],
     }),
   }),
 });
@@ -72,4 +81,5 @@ export const {
   useGetProductByIdQuery,
   useGetProductsMetaQuery,
   useCreateProductMutation,
+  useUpdateProductMutation,
 } = productApiSlice;

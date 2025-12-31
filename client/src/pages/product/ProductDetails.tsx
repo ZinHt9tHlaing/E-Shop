@@ -64,9 +64,11 @@ const ProductDetails = () => {
         <h2 className="text-xl lg:text-3xl font-bold mb-4">{product.name}</h2>
         <RatingConverter count={product.rating_count} />
         <p className="text-xl lg:text-3xl font-bold my-2">${product.price}</p>
-        <p className="text-sm font-medium text-gray-400">
-          {product.description}
-        </p>
+
+        <div
+          dangerouslySetInnerHTML={{ __html: product.description }}
+          className="text-sm font-medium text-gray-500"
+        />
 
         <hr className="mt-4 text-gray-400" />
 
