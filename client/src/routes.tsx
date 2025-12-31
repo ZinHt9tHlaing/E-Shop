@@ -14,6 +14,7 @@ import IsAdmin from "./pages/protector/IsAdmin";
 import Panel from "./pages/admin/Panel";
 import ErrorPage from "./pages/ErrorPage";
 import ProductUpdate from "./pages/admin/ProductUpdate";
+import ProductManagement from "./pages/admin/ProductManagement";
 
 export const router = createBrowserRouter([
   {
@@ -69,6 +70,10 @@ export const router = createBrowserRouter([
           {
             path: "/admin/edit-product/:id",
             element: <ProductUpdate />,
+          },
+          {
+            path: "/admin/manage-products",
+            element: <ProductManagement />,
           },
         ],
       },
