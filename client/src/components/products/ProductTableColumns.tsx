@@ -18,6 +18,8 @@ import {
 import { useNavigate } from "react-router";
 import { toast } from "sonner";
 import { useDeleteProductMutation } from "@/store/slices/api/productApi";
+import TableHeaderWithSortIcon from "./TableHeaderWithSortIcon";
+import { Checkbox } from "../ui/checkbox";
 
 const useProductColumns = (): ColumnDef<Product>[] => {
   const navigate = useNavigate();
@@ -36,6 +38,28 @@ const useProductColumns = (): ColumnDef<Product>[] => {
   };
 
   return [
+    {
+      id: "select",
+      header: ({ table }) => (
+        <Checkbox
+          checked={
+            table.getIsAllPageRowsSelected() ||
+            (table.getIsSomePageRowsSelected() && "indeterminate")
+          }
+          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+          aria-label="Select all"
+        />
+      ),
+      cell: ({ row }) => (
+        <Checkbox
+          checked={row.getIsSelected()}
+          onCheckedChange={(value) => row.toggleSelected(!!value)}
+          aria-label="Select row"
+        />
+      ),
+      enableSorting: false,
+      enableHiding: false,
+    },
     // images
     {
       accessorKey: "images",
@@ -83,10 +107,17 @@ const useProductColumns = (): ColumnDef<Product>[] => {
     // price
     {
       accessorKey: "price",
-      header: "Price",
+      header: ({ column }) => {
+        return (
+          <TableHeaderWithSortIcon
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+            text="Price"
+          />
+        );
+      },
       cell: ({ getValue }) => {
         const price = getValue() as number;
-        return <div className="font-medium">{price.toFixed(2)}</div>;
+        return <div className="font-medium text-right">{price.toFixed(2)}</div>;
       },
     },
 
@@ -97,26 +128,38 @@ const useProductColumns = (): ColumnDef<Product>[] => {
       cell: ({ getValue }) => {
         const stock = getValue() as number;
         return (
-          <Badge
-            className="font-medium"
-            variant={
-              stock > 10 ? "default" : stock > 0 ? "secondary" : "destructive"
-            }
-          >
-            {stock}
-          </Badge>
+          <div className="text-center">
+            <Badge
+              className="font-medium"
+              variant={
+                stock > 10 ? "default" : stock > 0 ? "secondary" : "destructive"
+              }
+            >
+              {stock}
+            </Badge>
+          </div>
         );
       },
     },
 
     // Created
-    // product.createdAt.toISOString().split("T")[0]
     {
       accessorKey: "createdAt",
-      header: "Created",
+      header: ({ column }) => {
+        return (
+          <TableHeaderWithSortIcon
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+            text="Created"
+          />
+        );
+      },
       cell: ({ getValue }) => {
         const date = new Date(getValue() as string);
-        return <div>{date.toISOString().split("T")[0]}</div>;
+        return (
+          <div className="text-sm text-right">
+            {date.toISOString().split("T")[0]}
+          </div>
+        );
       },
       enableSorting: true,
     },
