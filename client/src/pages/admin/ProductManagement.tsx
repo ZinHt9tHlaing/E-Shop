@@ -1,4 +1,5 @@
 import ProductStatusCard from "@/components/admin/ProductStatusCard";
+import ProductTable from "@/components/products/ProductTable";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -51,7 +52,10 @@ const ProductManagement = () => {
             Manage your product inventory and take actions
           </p>
         </div>
-        <Button asChild className="active:ring-2 active:ring-gray-400 duration-150">
+        <Button
+          asChild
+          className="active:ring-2 active:ring-gray-400 duration-150"
+        >
           <div className="flex items-center gap-1">
             <PackagePlus className="w-8 h-8" />
             <Link to={"/admin/create-product"}>Add new product</Link>
@@ -84,7 +88,9 @@ const ProductManagement = () => {
           <CardTitle>Product Inventory</CardTitle>
           <CardDescription>Manage and sort your products</CardDescription>
         </CardHeader>
-        <CardContent>{/* <ProductTable data={products} /> */}</CardContent>
+        <CardContent>
+          <ProductTable data={products} />
+        </CardContent>
       </Card>
     </div>
   );

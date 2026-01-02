@@ -196,11 +196,33 @@ export const deleteProduct = asyncHandler(
       return next(createError("Product not found", 404, errorCode.NotFound));
     }
 
-    await existingProduct.deleteOne();
+    const imagesToDeleteWithPublicAltOnly = existingProduct.images.map(
+      (img) => img.public_alt
+    );
 
-    res.status(200).json({
-      message: "Product deleted successfully",
-    });
+    try {
+      await existingProduct.deleteOne();
+
+      if (imagesToDeleteWithPublicAltOnly.length > 0) {
+        await Promise.all(
+          imagesToDeleteWithPublicAltOnly.map(async (imageAlt) => {
+            try {
+              await deleteImage(imageAlt);
+            } catch (error) {
+              console.log(`Failed to delete image: ${imageAlt}`, error);
+            }
+          })
+        );
+      }
+
+      res.status(200).json({
+        message: "Product deleted successfully",
+      });
+    } catch (error) {
+      return next(
+        createError("Fail to delete product", 500, errorCode.invalid)
+      );
+    }
   }
 );
 

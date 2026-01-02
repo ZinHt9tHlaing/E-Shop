@@ -63,13 +63,24 @@ export const productApiSlice = apiSlice.injectEndpoints({
       invalidatesTags: ["Product"],
     }),
 
-    updateProduct: builder.mutation<Product,{ id: string; formData: FormData }>({
+    updateProduct: builder.mutation<
+      Product,
+      { id: string; formData: FormData }
+    >({
       query: (data) => ({
         url: `/products/update-product/${data.id}`,
         method: "PUT",
         body: data.formData,
       }),
-      // invalidatesTags: ["Product"],
+      invalidatesTags: ["Product"],
+    }),
+
+    deleteProduct: builder.mutation<string, string>({
+      query: (data) => ({
+        url: `/products/delete-product/${data}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Product"],
     }),
   }),
 });
@@ -82,4 +93,5 @@ export const {
   useGetProductsMetaQuery,
   useCreateProductMutation,
   useUpdateProductMutation,
+  useDeleteProductMutation,
 } = productApiSlice;
