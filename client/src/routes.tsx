@@ -15,6 +15,9 @@ import Panel from "./pages/admin/Panel";
 import ErrorPage from "./pages/ErrorPage";
 import ProductUpdate from "./pages/admin/ProductUpdate";
 import ProductManagement from "./pages/admin/ProductManagement";
+import Dashboard from "./pages/admin/Dashboard";
+import UserManagement from "./pages/admin/UserManagement";
+import OrderManagement from "./pages/admin/OrderManagement";
 
 export const router = createBrowserRouter([
   {
@@ -74,6 +77,18 @@ export const router = createBrowserRouter([
           {
             path: "/admin/manage-products",
             element: <ProductManagement />,
+          },
+          {
+            path: "/admin/dashboard",
+            element: <Dashboard />,
+          },
+          {
+            path: "/admin/manage-users",
+            element: <UserManagement />,
+          },
+          {
+            path: "/admin/manage-orders",
+            element: <OrderManagement />,
           },
         ],
       },

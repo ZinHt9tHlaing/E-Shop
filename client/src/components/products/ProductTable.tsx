@@ -87,7 +87,7 @@ const ProductTable = ({ data }: ProductTableProps) => {
             onChange={(event) =>
               table.getColumn("name")?.setFilterValue(event.target.value)
             }
-            className="max-w-sm"
+            className="max-w-sm md:w-lg"
           />
         </div>
         <DropdownMenu>
