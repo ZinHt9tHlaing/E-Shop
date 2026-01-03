@@ -1,5 +1,7 @@
 import ProductStatusCard from "@/components/admin/ProductStatusCard";
+import OrderTable from "@/components/products/OrderTable";
 import ProductChart from "@/components/products/ProductChart ";
+import RecentProduct from "@/components/products/RecentProduct";
 import { useGetProductsWithFilterQuery } from "@/store/slices/api/productApi";
 import type { Product } from "@/types/productType";
 
@@ -48,6 +50,10 @@ const Dashboard = () => {
         />
       </div>
       <ProductChart data={products} />
+      <div className="mt-8 flex flex-col md:flex-row gap-6">
+        <RecentProduct data={products} />
+        <OrderTable />
+      </div>
     </section>
   );
 };
