@@ -2,12 +2,18 @@ import RatingConverter from "@/common/RatingConverter";
 import ProductDetailsLoading from "@/components/products/ProductDetailsLoading";
 import ProductNotFound from "@/components/products/ProductNotFound";
 import { useGetProductByIdQuery } from "@/store/slices/api/productApi";
+import { addToCart } from "@/store/slices/cart/cart";
+import type { AppDispatch } from "@/store/store";
 import type { ProductImage } from "@/types/productType";
 import { Minus, Plus } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { useParams } from "react-router";
+import { toast } from "sonner";
 
 const ProductDetails = () => {
+  const dispatch = useDispatch<AppDispatch>();
+
   const [selectedImage, setSelectedImage] = useState<string>();
   const [selectedColor, setSelectedColor] = useState<string>("#000000");
   const [selectedSize, setSelectedSize] = useState<string>("Medium");
@@ -27,6 +33,23 @@ const ProductDetails = () => {
 
   if (isLoading) return <ProductDetailsLoading />;
   if (!product) return <ProductNotFound />;
+
+  const addToCartHandler = () => {
+    toast.success("Product is added to cart.");
+    dispatch(
+      addToCart({
+        productId: product._id,
+        name: product.name,
+        image: String(selectedImage),
+        color: selectedColor,
+        size: selectedSize,
+        price: product.price,
+        quantity,
+      })
+    );
+
+    // dispatch(toggleCart());
+  };
 
   return (
     <section className="container grid grid-cols-1 lg:grid-cols-2 gap-8 mt-8">
@@ -128,7 +151,10 @@ const ProductDetails = () => {
               <Plus className="size-4" />
             </button>
           </div>
-          <button className="w-full text-center py-2 cursor-pointer bg-black text-sm font-medium text-white rounded-full active:scale-95 duration-200">
+          <button
+            onClick={addToCartHandler}
+            className="w-full text-center py-2 cursor-pointer bg-black text-sm font-medium text-white rounded-full active:scale-95 duration-200"
+          >
             Add to cart
           </button>
         </div>

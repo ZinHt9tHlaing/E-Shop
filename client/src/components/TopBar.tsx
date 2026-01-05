@@ -29,15 +29,15 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { useEffect, useState } from "react";
 import { apiSlice } from "@/store/slices/apiSlice";
+import { toggleCart } from "@/store/slices/cart/cart";
 
-type TopBarProps = {
-  toggleCart: () => void;
-};
-
-const TopBar = ({ toggleCart }: TopBarProps) => {
+const TopBar = () => {
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
 
   const userInfo = useSelector((state: RootState) => state.auth.userInfo);
+  const productInCart = useSelector(
+    (state: RootState) => state.cart.items.length
+  );
   const { data: currentUser, isError } = useCurrentUserQuery();
 
   const dispatch = useDispatch<AppDispatch>();
@@ -84,10 +84,15 @@ const TopBar = ({ toggleCart }: TopBarProps) => {
           </button>
         </div>
         <div className="flex items-center gap-4">
-          <ShoppingCart
-            onClick={toggleCart}
-            className="cursor-pointer active:scale-90 duration-200"
-          />
+          <div className="relative">
+            <ShoppingCart
+              onClick={() => dispatch(toggleCart())}
+              className="cursor-pointer active:scale-90 duration-200"
+            />
+            <span className="text-xs bg-red-500 rounded-full size-4 absolute text-center -top-2 -right-3">
+              {productInCart}
+            </span>
+          </div>
           {userInfo ? (
             <DropdownMenu>
               <DropdownMenuTrigger className="cursor-pointer">

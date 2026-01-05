@@ -1,4 +1,7 @@
+import { decreaseQuantity, increaseQuantity, removeFromCart } from "@/store/slices/cart/cart";
+import type { AppDispatch } from "@/store/store";
 import { Minus, Plus, Trash2 } from "lucide-react";
+import { useDispatch } from "react-redux";
 
 interface CartItemProps {
   name: string;
@@ -6,9 +9,21 @@ interface CartItemProps {
   color: string;
   price: number;
   image: string;
+  quantity: number;
+  productKey: string;
 }
 
-function CartItem({ name, size, color, price, image }: CartItemProps) {
+function CartItem({
+  name,
+  size,
+  color,
+  price,
+  image,
+  quantity,
+  productKey,
+}: CartItemProps) {
+  const dispatch = useDispatch<AppDispatch>();
+
   return (
     <div className="flex justify-between border-b pb-4 border-b-gray-200">
       <div className="flex gap-2 items-center">
@@ -31,16 +46,25 @@ function CartItem({ name, size, color, price, image }: CartItemProps) {
         </div>
       </div>
       <div className="flex items-end flex-col justify-between">
-        <button className="text-red-600 cursor-pointer active:scale-90 duration-200">
+        <button
+          onClick={() => dispatch(removeFromCart(productKey))}
+          className="text-red-600 cursor-pointer active:scale-90 duration-200"
+        >
           <Trash2 className="size-6" />
         </button>
         <div className="flex items-center gap-2">
-          <button className="bg-black p-2 text-white rounded-md cursor-pointer active:scale-90 duration-200">
-            <Plus className="size-4" />
-          </button>
-          <span className="font-medium">1</span>
-          <button className="bg-black p-2 text-white rounded-md cursor-pointer active:scale-90 duration-200">
+          <button
+            onClick={() => dispatch(decreaseQuantity(productKey))}
+            className="bg-black p-2 text-white rounded-md cursor-pointer active:scale-90 duration-200"
+          >
             <Minus className="size-4" />
+          </button>
+          <span className="font-medium">{quantity}</span>
+          <button
+            onClick={() => dispatch(increaseQuantity(productKey))}
+            className="bg-black p-2 text-white rounded-md cursor-pointer active:scale-90 duration-200"
+          >
+            <Plus className="size-4" />
           </button>
         </div>
       </div>
